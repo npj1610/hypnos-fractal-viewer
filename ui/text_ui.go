@@ -38,7 +38,6 @@ func (ui TextUI) Render() render.Render {
 func (ui TextUI) Start() {
 	for {
 		//send frame request, get frame (select for waiting input/ctrl+c?)
-		ui.render.RequestChan() <- true
 		ui.screen = <-ui.render.ScreenChan()
 
 		var sb strings.Builder
