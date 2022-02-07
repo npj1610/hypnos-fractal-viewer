@@ -2,6 +2,7 @@ package render
 
 import (
 	"npj1610/hypnos-fractal-viewer/fractal"
+	"npj1610/hypnos-fractal-viewer/types"
 )
 
 //una sola clase render ajustable mediante metodo factoria
@@ -14,8 +15,8 @@ type Render interface {
 	ScreenChan() chan [][][]int
 }
 
-func CreateTextRender(width int, height int, fractal fractal.Fractal) Render {
-	tr := TextRender{width: width, height: height, fractal: fractal}
+func CreateTextRender(screen types.ScreenBasic, fractal fractal.Fractal) Render {
+	tr := TextRender{ScreenInt: types.ScreenInt{ScreenBasic: screen}, fractal: fractal}
 	tr.screenChan = make(chan [][][]int, 100)
 	function := func(tr TextRender, point []int) []int {
 		out := make([]int, 1)

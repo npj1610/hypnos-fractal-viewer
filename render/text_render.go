@@ -2,23 +2,16 @@ package render
 
 import (
 	"npj1610/hypnos-fractal-viewer/fractal"
+	"npj1610/hypnos-fractal-viewer/types"
 )
 
 type TextRender struct {
-	functions              []func(TextRender, []int) []int
-	screenChan             chan [][][]int
-	screen                 [][][]int
-	fractal                fractal.Fractal
-	counter, width, height int
-	last_max               float64
-}
+	types.ScreenInt
 
-func (tr TextRender) Width() int {
-	return tr.width
-}
-
-func (tr TextRender) Height() int {
-	return tr.height
+	functions  []func(TextRender, []int) []int
+	screenChan chan [][][]int
+	fractal    fractal.Fractal
+	last_max   float64
 }
 
 func (tr TextRender) Functions() []func(TextRender, []int) []int {
@@ -38,19 +31,19 @@ func (tr TextRender) Start() {
 	tr.last_max = 40
 	for {
 		grid := tr.fractal.GetGrid(frame)
-		tr.screen = make([][][]int, tr.Height())
-		for line := range tr.screen {
-			tr.screen[line] = make([][]int, tr.Width())
-			for space := range tr.screen[line] {
-				tr.screen[line][space] = tr.functions[0](tr, grid[line][space])
-				if 0 < tr.screen[line][space][0] {
-					median = median + pointWeight*float64(tr.screen[line][space][0])
+		*tr.Screen() = make([][][]int, tr.Height())
+		for line := range *tr.Screen() {
+			(*tr.Screen())[line] = make([][]int, tr.Width())
+			for space := range (*tr.Screen())[line] {
+				(*tr.Screen())[line][space] = tr.functions[0](tr, grid[line][space])
+				if 0 < (*tr.Screen())[line][space][0] {
+					median = median + pointWeight*float64((*tr.Screen())[line][space][0])
 				}
 			}
 		}
 		tr.last_max = median / float64(tr.Width()*tr.Height())
 		median = 0
-		tr.ScreenChan() <- tr.screen
+		tr.ScreenChan() <- *tr.Screen()
 		frame[0][0] = frame[0][0] + 0.01*(-0.7463-frame[0][0])
 		frame[0][1] = frame[0][1] + 0.01*(0.1127-frame[0][1])
 		frame[1][0] = frame[1][0] - 0.01*(-0.7463-frame[0][0])

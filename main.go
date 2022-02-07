@@ -1,9 +1,10 @@
 package main
 
 import (
-	"npj1610/hypnos-fractal-viewer/render"
-	"npj1610/hypnos-fractal-viewer/ui"
 	"npj1610/hypnos-fractal-viewer/fractal"
+	"npj1610/hypnos-fractal-viewer/render"
+	"npj1610/hypnos-fractal-viewer/types"
+	"npj1610/hypnos-fractal-viewer/ui"
 )
 
 //Vale la pena la concurrencia? (si no, cambia los canales por llamadas a funciones?) Render genera los frames, aumenta los bufers!
@@ -14,12 +15,11 @@ import (
 //concurencia? un hilo de la calculadora hace select a las dependencias mientras el otro sigue calculando los pixeles nuevos
 
 func main() {
-	width := 119
-	height := 32
+	screen := types.CreateScreenBasic(119, 32)
 
-	var fractal fractal.Fractal = fractal.CreateMandelbrot(width, height, 5000)
-	var render render.Render = render.CreateTextRender(width, height, fractal)
-	var ui ui.UI = ui.CreateTextUI(25, width, height, render) //, screen)
+	var fractal fractal.Fractal = fractal.CreateMandelbrot(screen, 5000)
+	var render render.Render = render.CreateTextRender(screen, fractal)
+	var ui ui.UI = ui.CreateTextUI(screen, 25, render) //, screen)
 
 	go render.Start()
 	ui.Start()
