@@ -15,7 +15,7 @@ type Render interface {
 	ScreenChan() chan [][][]int
 }
 
-func CreateTextRender(screen types.ScreenBasic, fractal fractal.Fractal) Render {
+func NewTextRender(screen types.ScreenBasic, fractal fractal.Fractal) Render {
 	tr := TextRender{ScreenInt: types.ScreenInt{ScreenBasic: screen}, fractal: fractal}
 	tr.screenChan = make(chan [][][]int, 100)
 	function := func(tr TextRender, point []int) []int {

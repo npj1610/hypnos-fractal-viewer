@@ -15,11 +15,11 @@ import (
 //concurencia? un hilo de la calculadora hace select a las dependencias mientras el otro sigue calculando los pixeles nuevos
 
 func main() {
-	screen := types.CreateScreenBasic(119, 32)
+	screen := types.NewScreenBasic(119, 32)
 
-	var fractal fractal.Fractal = fractal.CreateMandelbrot(screen, 5000)
-	var render render.Render = render.CreateTextRender(screen, fractal)
-	var ui ui.UI = ui.CreateTextUI(screen, 25, render) //, screen)
+	var fractal fractal.Fractal = fractal.NewMandelbrot(screen, 5000)
+	var render render.Render = render.NewTextRender(screen, fractal)
+	var ui ui.UI = ui.NewTextUI(screen, 25, render) //, screen)
 
 	go render.Start()
 	ui.Start()

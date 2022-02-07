@@ -4,7 +4,7 @@ type ScreenBasic struct {
 	width, height int
 }
 
-func CreateScreenBasic(width, height int) ScreenBasic {
+func NewScreenBasic(width, height int) ScreenBasic {
 	return ScreenBasic{width: width, height: height}
 }
 

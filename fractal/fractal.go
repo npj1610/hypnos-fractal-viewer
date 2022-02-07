@@ -8,6 +8,6 @@ type Fractal interface {
 	GetGrid(positions [][]float64) [][][]int
 }
 
-func CreateMandelbrot(screen types.ScreenBasic, limit int) Mandelbrot {
+func NewMandelbrot(screen types.ScreenBasic, limit int) Mandelbrot {
 	return Mandelbrot{ScreenInt: types.ScreenInt{ScreenBasic: screen}, initial: 0, maxVal: 4, limit: limit}
 }
