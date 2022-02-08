@@ -32,7 +32,7 @@ func (ui TextUI) Render() render.Render {
 func (ui TextUI) Start() {
 	for {
 		//get frame (select for waiting input/ctrl+c?)
-		*ui.Screen() = <-ui.render.ScreenChan()
+		ui.ScreenInt = <-ui.render.ScreenChan()
 
 		var sb strings.Builder
 		for y := 0; y < ui.Height(); y++ {

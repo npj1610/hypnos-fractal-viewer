@@ -1,23 +1,23 @@
 package types
 
-type ScreenBasic struct {
+type ScreenBase struct {
 	width, height int
 }
 
-func NewScreenBasic(width, height int) ScreenBasic {
-	return ScreenBasic{width: width, height: height}
+func NewScreenBase(width, height int) ScreenBase {
+	return ScreenBase{width: width, height: height}
 }
 
-func (s ScreenBasic) Width() int {
+func (s ScreenBase) Width() int {
 	return s.width
 }
 
-func (s ScreenBasic) Height() int {
+func (s ScreenBase) Height() int {
 	return s.height
 }
 
 type ScreenInt struct {
-	ScreenBasic
+	ScreenBase
 	screen [][][]int
 }
 

@@ -9,8 +9,8 @@ type UI interface {
 	Start()
 }
 
-func NewTextUI(screen types.ScreenBasic, fps int, render render.Render) UI {
-	ui := TextUI{ScreenInt: types.ScreenInt{ScreenBasic: screen}, fps: fps, render: render}
-	ui.dictionary = map[int]rune{0: ' ', 1: 'º', 2: '@'}
+func NewTextUI(screen types.ScreenBase, fps int, dictionary map[int]rune, render render.Render) UI {
+	ui := TextUI{ScreenInt: types.ScreenInt{ScreenBase: screen}, fps: fps, render: render}
+	ui.dictionary = dictionary
 	return ui
 }
