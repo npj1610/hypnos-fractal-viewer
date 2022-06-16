@@ -15,12 +15,3 @@ func (s ScreenBase) Width() int {
 func (s ScreenBase) Height() int {
 	return s.height
 }
-
-type ScreenInt struct {
-	ScreenBase
-	screen [][][]int
-}
-
-func (s *ScreenInt) Screen() *[][][]int {
-	return &s.screen
-}

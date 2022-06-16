@@ -1,44 +1,39 @@
-package ui
+package inout
 
 import (
 	"fmt"
 	"strings"
 	"time"
 
-	"npj1610/hypnos-fractal-viewer/render"
 	"npj1610/hypnos-fractal-viewer/types"
+	"npj1610/hypnos-fractal-viewer/visual"
 )
 
-type TextUI struct {
-	types.ScreenInt
-
-	fps        int
-	render     render.Render
-	dictionary map[int]rune
+func NewTextUI(screen types.ScreenBase, fps int, render visual.TextRender) TextUI {
+	return TextUI{types.TextScreen{ScreenBase: screen}, fps, render}
 }
 
-func (ui TextUI) convert(n int) rune {
-	return ui.dictionary[n]
+type TextUI struct {
+	types.TextScreen
+
+	fps    int
+	render visual.TextRender
 }
 
 func (ui TextUI) FPS() int {
 	return ui.fps
 }
 
-func (ui TextUI) Render() render.Render {
-	return ui.render
-}
-
 func (ui TextUI) Start() {
 	for {
 		//get frame (select for waiting input/ctrl+c?)
-		ui.ScreenInt = <-ui.render.ScreenChan()
+		ui.TextScreen = <-ui.render.ScreenChan()
 
 		var sb strings.Builder
 		for y := 0; y < ui.Height(); y++ {
 			sb.WriteRune('\n')
 			for x := 0; x < ui.Width(); x++ {
-				sb.WriteRune(ui.convert((*ui.Screen())[y][x][0]))
+				sb.WriteRune((*ui.Screen())[y][x])
 			}
 		}
 		fmt.Print(sb.String())

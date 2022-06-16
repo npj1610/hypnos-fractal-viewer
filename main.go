@@ -1,10 +1,10 @@
 package main
 
 import (
-	"npj1610/hypnos-fractal-viewer/fractal"
-	"npj1610/hypnos-fractal-viewer/render"
+	"npj1610/hypnos-fractal-viewer/inout"
+	"npj1610/hypnos-fractal-viewer/math"
 	"npj1610/hypnos-fractal-viewer/types"
-	"npj1610/hypnos-fractal-viewer/ui"
+	"npj1610/hypnos-fractal-viewer/visual"
 )
 
 //Vale la pena la concurrencia? (si no, cambia los canales por llamadas a funciones?) Render genera los frames, aumenta los bufers!
@@ -14,15 +14,14 @@ import (
 //Se calculan los pixeles y se dejan huecos (dependencias al frame anterior), una vez calculados, se envian datos por canal
 //concurencia? un hilo de la calculadora hace select a las dependencias mientras el otro sigue calculando los pixeles nuevos
 
-func main() {
+func main() { //200, 60
 	screen := types.NewScreenBase(119, 32)
-	limit := 10000
-	dictionary := map[int]rune{0: '@', 3: '·', 5: 'º', 4: '8', 2: '&', 1: ' '}
+	dictionary := map[int]rune{0: '@', 1: '·', 2: 'º', 3: '8', 4: '&', 5: ' '}
 
-	var colorizer fractal.ColorizerMandelbrot = fractal.NewColorizerMandelbrotConfig(len(dictionary))
-	var fractal fractal.FractalComplex = fractal.NewMandelbrot(screen, limit, colorizer)
-	var render render.Render = render.NewTextRender(screen, fractal)
-	var ui ui.UI = ui.NewTextUI(screen, 25, dictionary, render)
+	var colorizer visual.TextMandelbrotColorizer = visual.NewTextMBAutobalance(dictionary)
+	var fractal math.Mandelbrot = math.NewMandelbrot()
+	var render visual.TextRender = visual.NewTextRender(screen, fractal, colorizer)
+	var ui inout.TextUI = inout.NewTextUI(screen, 25, render)
 
 	go render.Start()
 	ui.Start()
