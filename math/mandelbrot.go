@@ -1,12 +1,7 @@
 package math
 
-import (
-	"math"
-	"math/cmplx"
-)
-
 func NewMandelbrot() Mandelbrot {
-	return Mandelbrot{initial: 0, maxVal: 4, limit: 5000}
+	return Mandelbrot{initial: 0, maxVal: 4, limit: 2000}
 }
 
 type Mandelbrot struct {
@@ -30,10 +25,10 @@ func (mb Mandelbrot) Initial() complex128 {
 func (mb Mandelbrot) CalcPoint(c complex128) int {
 	p := mb.Initial()
 	for counter := 0; counter < mb.Limit(); counter++ {
-		if mb.MaxVal() < math.Pow(real(p), 2)+math.Pow(imag(p), 2) {
+		if mb.MaxVal() < real(p)*real(p)+imag(p)*imag(p) {
 			return counter
 		}
-		p = cmplx.Pow(p, complex128(2)) + c
+		p = p*p + c
 	}
 	return 0
 }

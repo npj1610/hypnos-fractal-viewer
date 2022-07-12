@@ -1,6 +1,7 @@
 package visual
 
 import (
+	m "math"
 	"npj1610/hypnos-fractal-viewer/math"
 	"npj1610/hypnos-fractal-viewer/types"
 )
@@ -22,14 +23,14 @@ func (tr TextRender) ScreenChan() chan types.TextScreen {
 	return tr.screenChan
 }
 
-func (tr TextRender) Start() {
-	topLeft := complex(-2, 1)
-	bottomRight := complex(1, -1)
+func (tr TextRender) Start() { //-0.74529, 0.113075
+	var zoom TextMBZoom = TextMBBasicZoom{rate: 1.01, center: complex(-0.74529, 0.113075), centerShift: 0.01, rotation: 2 * m.Pi / 150}
+	win := zoom.StartingWindow()
 
 	for {
-		size := bottomRight - topLeft
-		rightstep := complex(real(size)/float64(tr.Width()), 0)
-		downstep := complex(0, imag(size)/float64(tr.Height()))
+		topLeft := win.start
+		rightstep := complex(real(win.top)/float64(tr.Width()), imag(win.top)/float64(tr.Width()))
+		downstep := complex(real(win.side)/float64(tr.Height()), imag(win.side)/float64(tr.Height()))
 
 		tr.colorizer.PreCalc(tr.fractal, &tr.TextScreen)
 
@@ -42,15 +43,27 @@ func (tr TextRender) Start() {
 
 		tr.colorizer.PostCalc(tr.fractal, &tr.TextScreen)
 
-		tr.ScreenChan() <- tr.TextScreen
+		tr.ScreenChan() <- tr.TextScreen.Copy()
 
-		topLeft += complex(
-			0.01*(-0.7463-real(topLeft)),
-			0.01*(0.1127-imag(topLeft)),
-		)
-		bottomRight -= complex(
-			0.01*(-0.7463-real(topLeft)),
-			0.01*(0.1127-imag(topLeft)),
-		)
+		win = zoom.UpdateWindow(win)
 	}
 }
+
+/*
+BENCHMARKING
+import (
+    "log"
+    "os"
+    "runtime"
+    "runtime/pprof"
+)
+
+cpu, err := os.Create("prof\\cpu" + strconv.FormatInt(int64(i), 10) + ".prof")
+if err != nil {
+	log.Fatal(err)
+}
+pprof.StartCPUProfile(cpu)
+
+
+pprof.StopCPUProfile()
+*/
