@@ -12,6 +12,10 @@ type TextMBBasicZoom struct {
 	rotation    float64    //rotation per frame in radians
 }
 
+func NewTextMBBasicZoom(r float64, c complex128, cs float64, phi float64) TextMBBasicZoom {
+	return TextMBBasicZoom{rate: r, center: c, centerShift: cs, rotation: phi}
+}
+
 func (zoom TextMBBasicZoom) UpdateWindow(win TextMBWindow) TextMBWindow {
 	winCenter := win.start + win.side/2 + win.top/2
 

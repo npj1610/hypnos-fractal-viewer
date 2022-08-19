@@ -53,7 +53,7 @@ func (colorizer *TextMBAutobalance) PostCalc(mb math.Mandelbrot, screen *types.T
 			nextDivision++
 			//if there are spares after last division, include them
 			if len(colorizer.dictionary) <= nextDivision {
-				colorizer.divisions[nextDivision-1] = len(colorizer.histogram) - 1
+				colorizer.divisions[len(colorizer.dictionary)-1] = len(colorizer.histogram) - 1
 				break
 			}
 

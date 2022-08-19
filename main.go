@@ -1,6 +1,7 @@
 package main
 
 import (
+	m "math"
 	"npj1610/hypnos-fractal-viewer/inout"
 	"npj1610/hypnos-fractal-viewer/math"
 	"npj1610/hypnos-fractal-viewer/types"
@@ -14,7 +15,7 @@ import (
 //Se calculan los pixeles y se dejan huecos (dependencias al frame anterior), una vez calculados, se envian datos por canal
 //concurencia? un hilo de la calculadora hace select a las dependencias mientras el otro sigue calculando los pixeles nuevos
 
-func main() { //200, 60; 119,32
+func main() { //200, 60; 119,32; 103, 23
 	screen := types.NewScreenBase(200, 60)
 	//dictionary := map[int]rune{0: '@', 1: '·', 2: 'º', 3: '8', 4: '&', 5: ' '}
 	//dictionary := map[int]rune{1: 'o', 2: '.', 3: ':', 4: '-', 5: '=', 6: '+', 7: '*', 8: '#', 9: '%', 0: '@'}
@@ -27,9 +28,12 @@ func main() { //200, 60; 119,32
 		dictionary[i] = chars[i]
 	}
 
+	//-0.74529, 0.113075
+	//if zoom is faster than centershift it zooms to a middlepoint (1-centershift =< 1/rate)
+	var zoom visual.TextMBZoom = visual.NewTextMBBasicZoom(1.005, complex(-0.77568377, 0.13646737), 0.01, 2*m.Pi/(2*150))
 	var colorizer visual.TextMandelbrotColorizer = visual.NewTextMBAutobalance(dictionary)
 	var fractal math.Mandelbrot = math.NewMandelbrot()
-	var render visual.TextRender = visual.NewTextRender(screen, fractal, colorizer)
+	var render visual.TextRender = visual.NewTextRender(screen, fractal, colorizer, zoom)
 	var ui inout.TextUI = inout.NewTextUI(screen, 15, render)
 
 	go render.Start()

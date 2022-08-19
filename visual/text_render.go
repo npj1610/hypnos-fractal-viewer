@@ -1,14 +1,13 @@
 package visual
 
 import (
-	m "math"
 	"npj1610/hypnos-fractal-viewer/math"
 	"npj1610/hypnos-fractal-viewer/types"
 )
 
-func NewTextRender(screen types.ScreenBase, fractal math.Mandelbrot, colorizer TextMandelbrotColorizer) TextRender {
+func NewTextRender(screen types.ScreenBase, fractal math.Mandelbrot, colorizer TextMandelbrotColorizer, zoom TextMBZoom) TextRender {
 	var screenChan = make(chan types.TextScreen, 100)
-	return TextRender{types.NewTextScreen(screen), screenChan, fractal, colorizer}
+	return TextRender{types.NewTextScreen(screen), screenChan, fractal, colorizer, zoom}
 }
 
 type TextRender struct {
@@ -17,15 +16,15 @@ type TextRender struct {
 	screenChan chan types.TextScreen
 	fractal    math.Mandelbrot
 	colorizer  TextMandelbrotColorizer
+	zoom       TextMBZoom
 }
 
 func (tr TextRender) ScreenChan() chan types.TextScreen {
 	return tr.screenChan
 }
 
-func (tr TextRender) Start() { //-0.74529, 0.113075
-	var zoom TextMBZoom = TextMBBasicZoom{rate: 1.01, center: complex(-0.74529, 0.113075), centerShift: 0.01, rotation: 2 * m.Pi / 150}
-	win := zoom.StartingWindow()
+func (tr TextRender) Start() {
+	win := tr.zoom.StartingWindow()
 
 	for {
 		topLeft := win.start
@@ -45,7 +44,7 @@ func (tr TextRender) Start() { //-0.74529, 0.113075
 
 		tr.ScreenChan() <- tr.TextScreen.Copy()
 
-		win = zoom.UpdateWindow(win)
+		win = tr.zoom.UpdateWindow(win)
 	}
 }
 
