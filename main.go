@@ -15,6 +15,11 @@ import (
 //Se calculan los pixeles y se dejan huecos (dependencias al frame anterior), una vez calculados, se envian datos por canal
 //concurencia? un hilo de la calculadora hace select a las dependencias mientras el otro sigue calculando los pixeles nuevos
 
+//NEXT STEPS:
+// - Add commandline interface (class)
+// - Add Geometrical/Pixel Based Fractals
+// - Redesign screen systems and parallelization, minimize copying
+
 func main() { //200, 60; 119,32; 103, 23
 	screen := types.NewScreenBase(200, 60)
 	//dictionary := map[int]rune{0: '@', 1: '·', 2: 'º', 3: '8', 4: '&', 5: ' '}

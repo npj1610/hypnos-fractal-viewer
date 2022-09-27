@@ -6,7 +6,7 @@ import (
 )
 
 type TextMBAutobalance struct {
-	types.ScreenInt
+	*types.ScreenInt
 
 	histogram, divisions []int
 	total                int

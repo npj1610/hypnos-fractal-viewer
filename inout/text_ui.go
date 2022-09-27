@@ -9,12 +9,12 @@ import (
 	"npj1610/hypnos-fractal-viewer/visual"
 )
 
-func NewTextUI(screen types.ScreenBase, fps int, render visual.TextRender) TextUI {
-	return TextUI{types.TextScreen{ScreenBase: screen}, fps, render}
+func NewTextUI(screen *types.ScreenBase, fps int, render visual.TextRender) TextUI {
+	return TextUI{&types.TextScreen{ScreenBase: screen}, fps, render}
 }
 
 type TextUI struct {
-	types.TextScreen
+	*types.TextScreen
 
 	fps    int
 	render visual.TextRender

@@ -1,7 +1,7 @@
 package types
 
 type TextScreen struct {
-	ScreenBase
+	*ScreenBase
 	screen [][]rune
 }
 
@@ -9,7 +9,7 @@ func (s *TextScreen) Screen() *[][]rune {
 	return &s.screen
 }
 
-func (s TextScreen) Copy() TextScreen {
+func (s TextScreen) Copy() *TextScreen {
 	output := TextScreen{ScreenBase: s.ScreenBase}
 	output.screen = make([][]rune, s.Height())
 	for row := range output.screen {
@@ -18,14 +18,15 @@ func (s TextScreen) Copy() TextScreen {
 			output.screen[row][column] = s.screen[row][column]
 		}
 	}
-	return output
+	return &output
 }
 
-func NewTextScreen(sb ScreenBase) TextScreen {
+//Pointer to Text Screen allows efficient concurrency
+func NewTextScreen(sb *ScreenBase) *TextScreen {
 	output := TextScreen{ScreenBase: sb}
 	output.screen = make([][]rune, sb.Height())
 	for row := range output.screen {
 		output.screen[row] = make([]rune, sb.Width())
 	}
-	return output
+	return &output
 }

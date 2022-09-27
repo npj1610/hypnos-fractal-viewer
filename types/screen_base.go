@@ -4,8 +4,10 @@ type ScreenBase struct {
 	width, height int
 }
 
-func NewScreenBase(width, height int) ScreenBase {
-	return ScreenBase{width: width, height: height}
+//pointer to Screen Base allows dynamic screen size
+//needs a list of callbacks to update screen size when modified
+func NewScreenBase(width, height int) *ScreenBase {
+	return &ScreenBase{width: width, height: height}
 }
 
 func (s ScreenBase) Width() int {

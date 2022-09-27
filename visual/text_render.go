@@ -5,21 +5,21 @@ import (
 	"npj1610/hypnos-fractal-viewer/types"
 )
 
-func NewTextRender(screen types.ScreenBase, fractal math.Mandelbrot, colorizer TextMandelbrotColorizer, zoom TextMBZoom) TextRender {
-	var screenChan = make(chan types.TextScreen, 100)
+func NewTextRender(screen *types.ScreenBase, fractal math.Mandelbrot, colorizer TextMandelbrotColorizer, zoom TextMBZoom) TextRender {
+	var screenChan = make(chan *types.TextScreen, 100)
 	return TextRender{types.NewTextScreen(screen), screenChan, fractal, colorizer, zoom}
 }
 
 type TextRender struct {
-	types.TextScreen
+	*types.TextScreen
 
-	screenChan chan types.TextScreen
+	screenChan chan *types.TextScreen
 	fractal    math.Mandelbrot
 	colorizer  TextMandelbrotColorizer
 	zoom       TextMBZoom
 }
 
-func (tr TextRender) ScreenChan() chan types.TextScreen {
+func (tr TextRender) ScreenChan() chan *types.TextScreen {
 	return tr.screenChan
 }
 
@@ -31,7 +31,7 @@ func (tr TextRender) Start() {
 		rightstep := complex(real(win.top)/float64(tr.Width()), imag(win.top)/float64(tr.Width()))
 		downstep := complex(real(win.side)/float64(tr.Height()), imag(win.side)/float64(tr.Height()))
 
-		tr.colorizer.PreCalc(tr.fractal, &tr.TextScreen)
+		tr.colorizer.PreCalc(tr.fractal, tr.TextScreen)
 
 		for row := range *tr.Screen() {
 			for point := range (*tr.Screen())[row] {
@@ -40,15 +40,18 @@ func (tr TextRender) Start() {
 			}
 		}
 
-		tr.colorizer.PostCalc(tr.fractal, &tr.TextScreen)
+		tr.colorizer.PostCalc(tr.fractal, tr.TextScreen)
 
-		tr.ScreenChan() <- tr.TextScreen.Copy()
+		tr.ScreenChan() <- tr.TextScreen
+
+		tr.TextScreen = types.NewTextScreen(tr.TextScreen.ScreenBase)
 
 		win = tr.zoom.UpdateWindow(win)
 	}
 }
 
 /*
+go tool pprof -web file.prof
 BENCHMARKING
 import (
     "log"
